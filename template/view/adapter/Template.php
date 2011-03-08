@@ -1,6 +1,6 @@
 <?php
 /**
- * Lithium: the most rad php framework
+ * Li3_twig: Two step Twig renderer for Lithium: the most rad php framework
  *
  * @copyright     Copyright 2010, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
@@ -18,6 +18,7 @@ use \Twig_Node_Expression_GetAttr;
  * Template class for rendering Twig templates
  *
  * @see http://twig-project.org
+ * @author Raymond Julin <raymond.julin@gmail.com>
  */
 abstract class Template extends \Twig_Template {
 

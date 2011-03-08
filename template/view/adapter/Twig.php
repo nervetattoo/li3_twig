@@ -1,6 +1,6 @@
 <?php
 /**
- * Lithium: the most rad php framework
+ * Li3_twig: Two step Twig renderer for Lithium: the most rad php framework
  *
  * @copyright     Copyright 2010, Union of RAD (http://union-of-rad.org)
  * @license       http://opensource.org/licenses/bsd-license.php The BSD License
@@ -26,6 +26,7 @@ use \li3_twig\template\view\adapter\Template;
  *
  * @see http://twig-project.org
  * @see lithium\template\view\Renderer
+ * @author Raymond Julin <raymond.julin@gmail.com>
  */
 class Twig extends \lithium\template\view\Renderer {
 
@@ -43,9 +44,17 @@ class Twig extends \lithium\template\view\Renderer {
 	 * @param array $config Optional configuration directives.
 	 *        Please see http://www.twig-project.org/book/03-Twig-for-Developers for all
 	 *        available configuration keys and their description.
+     *        There are 4 settings that is set
+     *        - `cache`: Path to /resources/tmp/cache/templates/ where compiled templates will be stored
+     *        - `auto_reload`: If Environment is not production, templates will be reloaded once edited
+     *        - `base_template_class`: Overriden to the Template adapter, be carefull with changing this
+     *        - `autoescape`: Set to false because the way we inject content is with full html that should not be escaped
 	 * @return void
 	 */
     public function __construct(array $config = array()) {
+        /**
+         * TODO Change hardcoded LITHIUM_APP_PATH to be dynamic
+         */
 		$defaults = array(
 			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
             'auto_reload' => (!Environment::is('production')),
