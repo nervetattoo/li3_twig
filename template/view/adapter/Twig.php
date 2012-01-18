@@ -8,11 +8,11 @@
 
 namespace li3_twig\template\view\adapter;
 
-use \lithium\core\Libraries;
-use \lithium\core\Environment;
-use \Twig_Environment;
-use \Twig_Loader_Filesystem;
-use \li3_twig\template\view\adapter\Template;
+use lithium\core\Libraries;
+use lithium\core\Environment;
+use Twig_Environment;
+use Twig_Loader_Filesystem;
+use li3_twig\template\view\adapter\Template;
 
 /**
  * View adapter for Twig templating.
@@ -58,7 +58,7 @@ class Twig extends \lithium\template\view\Renderer {
 		$defaults = array(
 			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
             'auto_reload' => (!Environment::is('production')),
-            'base_template_class' => '\li3_twig\template\view\adapter\Template',
+            'base_template_class' => 'li3_twig\template\view\adapter\Template',
             'autoescape' => false
 		);
 		parent::__construct($config + $defaults);
@@ -95,7 +95,7 @@ class Twig extends \lithium\template\view\Renderer {
 		//Loading template.. Will look in all the paths.
 		$template = $this->environment->loadTemplate(basename($paths[0]));
 
-		//Because $this is not availible in the Twig template view is used as a substitute.
+		//Because $this is not available in the Twig template view is used as a substitute.
 		return $template->render((array) $data + array('this' => $this));
 	}
 }

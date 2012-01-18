@@ -8,35 +8,33 @@
 
 namespace li3_twig\template;
 
-use \lithium\util\String;
-use \lithium\core\Libraries;
-use \lithium\core\Object;
+use lithium\util\String;
+use lithium\core\Libraries;
 
 /**
  * View adapter for Twig templating. http://twig-project.org
  *
  * @see lithium\template\view\Renderer
  */
-class Loader extends Object {
+class Loader extends \lithium\core\Object {
 
 	/**
 	 * Returns the template paths.
 	 *
 	 * @param mixed $type
-	 * @param array $options
+	 * @param array $params
 	 * @return mixed
 	 */
-	public function template($type, $options = array()) {
+	public function template($type, array $params = array()) {
 		if (!isset($this->_config['paths'][$type])) {
 			return null;
 		}
 
-		$options['library'] = isset($options['library']) ? $options['library'] : 'app';
-		$library = Libraries::get($options['library']);
-		$options['library'] = $library['path'];
+		$library = Libraries::get(isset($params['library']) ? $params['library'] : true);
+		$params['library'] = $library['path'];
 
-		return array_map(function ($item) use ($options) {
-			return String::insert($item, $options);
+		return array_map(function ($item) use ($params) {
+			return String::insert($item, $params);
 		}, (array) $this->_config['paths'][$type]);
 	}
 }
