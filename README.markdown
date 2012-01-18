@@ -18,5 +18,5 @@ helpers like in regular lithium templates.
 > <h1>Hello {{ name }}</h1>
 > {{ this.form.create }}
 > {{ this.form.text('title') }}
-> {{ this.form.select('gender', ['m':'male','f':'female']) }}
+> {{ this.form.select('gender', {'m':'male','f':'female'}) }}
 > {{ this.form.end }}
