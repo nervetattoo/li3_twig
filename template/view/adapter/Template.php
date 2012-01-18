@@ -9,10 +9,10 @@
 namespace li3_twig\template\view\adapter;
 
 use RuntimeException;
-use \lithium\core\Libraries;
-use \Twig_Environment;
-use \Twig_Loader_Filesystem;
-use \Twig_Node_Expression_GetAttr;
+use lithium\core\Libraries;
+use Twig_Environment;
+use Twig_Loader_Filesystem;
+use Twig_Node_Expression_GetAttr;
 
 /**
  * Template class for rendering Twig templates
@@ -28,11 +28,12 @@ abstract class Template extends \Twig_Template {
     protected function getAttribute($object, $item, array $arguments = array(), 
                                     $type = Twig_Node_Expression_GetAttr::TYPE_ANY, 
                                     $noStrictCheck = false, $line = -1) {
-        $result = parent::getAttribute($object, $item, $arguments, $type, $noStrictCheck, $line);
-        if ($result === null) {
+        $result = parent::getAttribute($object, $item, $arguments, $type,
+		                               $noStrictCheck, $line);
+        if (is_null($result)) {
             // Fetch the helper object and return it
             try {
-                $result = (is_object($object)) ? $object->helper($item) : null;
+                $result = is_object($object) ? $object->helper($item) : null;
             }
             catch (\Exception $e) {
                 $result = null;
