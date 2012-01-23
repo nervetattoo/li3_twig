@@ -8,11 +8,11 @@
 
 namespace li3_twig\template\view\adapter;
 
-use RuntimeException;
+use \RuntimeException;
 use lithium\core\Libraries;
-use Twig_Environment;
-use Twig_Loader_Filesystem;
-use Twig_Node_Expression_GetAttr;
+use \Twig_Environment;
+use \Twig_Loader_Filesystem;
+use \Twig_TemplateInterface;
 
 /**
  * Template class for rendering Twig templates
@@ -26,7 +26,7 @@ abstract class Template extends \Twig_Template {
      * Override the getAttribute to handle lazy loaded li3 helpers
      */
     protected function getAttribute($object, $item, array $arguments = array(), 
-                                    $type = Twig_Node_Expression_GetAttr::TYPE_ANY, 
+                                    $type = Twig_TemplateInterface::ANY_CALL,
                                     $noStrictCheck = false, $line = -1) {
         $result = parent::getAttribute($object, $item, $arguments, $type,
 		                               $noStrictCheck, $line);
