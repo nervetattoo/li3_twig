@@ -21,12 +21,14 @@ Libraries::add('Twig', array(
  * Add Twig to recognized media types.
  */
 Media::type('default', null, array(
-	'view' => 'lithium\template\View',
+	'view' => 'li3_twig\template\View',
 	'loader' => 'li3_twig\template\Loader',
 	'renderer' => 'li3_twig\template\view\adapter\Twig',
 	'paths' => array(
-		'template' => '{:library}/views/{:controller}/{:template}.{:type}.twig',
-		'layout' => '{:library}/views/layouts/{:layout}.{:type}.twig'
+		'template' => array(
+			'{:library}/views/{:controller}/{:template}.{:type}.twig',
+			'{:library}/views/layouts'
+		)
 	)
 ));
 
