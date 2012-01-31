@@ -2,9 +2,7 @@
 
 namespace li3_twig\template;
 
-use lithium\template\View as LithiumView;
-
-class View extends LithiumView {
+class View extends \lithium\template\View {
 	protected $_processes = array(
 		'all' => array('template'),
 		'template' => array('template'),

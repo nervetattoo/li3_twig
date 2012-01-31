@@ -18,7 +18,9 @@ Libraries::add('Twig', array(
 ));
 
 /**
- * Add Twig to recognized media types.
+ * Make Twig the default renderer for View.
+ * If you want to keep the old two process rendering but use Twig for templating,
+ * comment the following and use the second Media::type under it.
  */
 Media::type('default', null, array(
 	'view' => 'li3_twig\template\View',
@@ -31,5 +33,15 @@ Media::type('default', null, array(
 		)
 	)
 ));
+
+/*Media::type('default', null, array(
+	'view' => 'lithium\template\View',
+	'loader' => 'li3_twig\template\Loader',
+	'renderer' => 'li3_twig\template\view\adapter\Twig',
+	'paths' => array(
+		'template' => '{:library}/views/{:controller}/{:template}.{:type}.twig',
+		'layout' => '{:library}/views/layouts/{:layout}.{:type}.twig'
+	)
+));*/
 
 ?>

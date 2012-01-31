@@ -23,3 +23,8 @@ helpers like in regular lithium templates.
 {{ this.form.select('gender', {'m':'male','f':'female'}) }}
 {{ this.form.end }}
 ```
+
+Using the Twig one process rendering,
+you can extend layouts by using the layout path (relative to your views directory).
+If you want to use the Lithium two process rendering
+(the result of the view is echoed inside your selected layout), just edit the bootstrap file.
