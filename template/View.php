@@ -9,7 +9,7 @@ class View extends \lithium\template\View {
 		'element' => array('element')
 	);
 	protected $_steps = array(
-		'template' => array('path' => 'template', 'capture' => array('context' => 'content')),
+		'template' => array('path' => 'template'),
 		'element' => array('path' => 'element')
 	);
 }
