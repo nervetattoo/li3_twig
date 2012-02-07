@@ -22,26 +22,26 @@ Libraries::add('Twig', array(
  * If you want to keep the old two process rendering but use Twig for templating,
  * comment the following and use the second Media::type under it.
  */
-// Media::type('default', null, array(
-// 	'view' => 'li3_twig\template\View',
-// 	'loader' => 'li3_twig\template\Loader',
-// 	'renderer' => 'li3_twig\template\view\adapter\Twig',
-// 	'paths' => array(
-// 		'template' => array(
-// 			'{:library}/views/{:controller}/{:template}.{:type}.twig',
-// 			'{:library}/views/layouts'
-// 		)
-// 	)
-// ));
-
 Media::type('default', null, array(
-	'view' => 'lithium\template\View',
+	'view' => 'li3_twig\template\View',
 	'loader' => 'li3_twig\template\Loader',
 	'renderer' => 'li3_twig\template\view\adapter\Twig',
 	'paths' => array(
-		'template' => '{:library}/views/{:controller}/{:template}.{:type}.twig',
-		'layout' => '{:library}/views/layouts/{:layout}.{:type}.twig'
+		'template' => array(
+			'{:library}/views/{:controller}/{:template}.{:type}.twig',
+			'{:library}/views/layouts'
+		)
 	)
 ));
+
+// Media::type('default', null, array(
+// 	'view' => 'lithium\template\View',
+// 	'loader' => 'li3_twig\template\Loader',
+// 	'renderer' => 'li3_twig\template\view\adapter\Twig',
+// 	'paths' => array(
+// 		'template' => '{:library}/views/{:controller}/{:template}.{:type}.twig',
+// 		'layout' => '{:library}/views/layouts/{:layout}.{:type}.twig'
+// 	)
+// ));
 
 ?>
