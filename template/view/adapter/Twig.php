@@ -10,8 +10,11 @@ namespace li3_twig\template\view\adapter;
 
 use lithium\core\Libraries;
 use lithium\core\Environment;
+
 use Twig_Environment;
 use Twig_Loader_Filesystem;
+use Twig_Filter_Function;
+
 use li3_twig\template\view\adapter\Template;
 
 /**
@@ -52,27 +55,54 @@ class Twig extends \lithium\template\view\Renderer {
 	 * @return void
 	 */
     public function __construct(array $config = array()) {
-        /**
-         * TODO Change hardcoded LITHIUM_APP_PATH to be dynamic
-         */
+		/**
+		 * TODO Change hardcoded LITHIUM_APP_PATH to be dynamic
+		 */
 		$defaults = array(
 			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
-            'auto_reload' => (!Environment::is('production')),
-            'base_template_class' => 'li3_twig\template\view\adapter\Template',
-            'autoescape' => false
+			'auto_reload' => (!Environment::is('production')),
+			'base_template_class' => 'li3_twig\template\view\adapter\Template',
+			'autoescape' => false
 		);
+
 		parent::__construct($config + $defaults);
 	}
 
 	/**
 	 * Initialize the necessary Twig objects & attach them to the current object instance.
+	 * Attach any configured filters in the lithium app bootstrap to the Twig object.
 	 *
 	 * @return void
 	 */
 	public function _init() {
 		parent::_init();
+
 		$Loader = new Twig_Loader_Filesystem(array());
 		$this->environment = new Twig_Environment($Loader, $this->_config);
+
+		$options = Libraries::get('li3_twig');
+
+		if (!empty($options['config']['filters'])) {
+			if (is_string($options['config']['filters'])) {
+				$filters = array($options['config']['filters']);
+			}
+			else {
+				$filters = $options['config']['filters'];
+			}
+
+			foreach ($filters as $filter) {
+				if (strstr($filter, '::') !== false) {
+					$this->environment->addFilter('test', new Twig_Filter_Function($filter));
+				}
+				else {
+					$methods = get_class_methods($filter);
+
+					foreach ($methods as $method) {
+						$this->environment->addFilter('test', new Twig_Filter_Function($filter.'::'.$method));
+					}
+				}
+			}
+		}
 	}
 
 	/**
