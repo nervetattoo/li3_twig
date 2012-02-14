@@ -103,6 +103,8 @@ class Twig extends \lithium\template\view\Renderer {
 				}
 			}
 		}
+
+		$this->environment->addFunction('view', &$this);
 	}
 
 	/**
