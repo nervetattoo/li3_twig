@@ -14,6 +14,7 @@ use lithium\core\Environment;
 use Twig_Environment;
 use Twig_Loader_Filesystem;
 use Twig_Filter_Function;
+use Twig_Function_Function;
 
 use li3_twig\template\view\adapter\Template;
 
@@ -32,6 +33,11 @@ use li3_twig\template\view\adapter\Template;
  * @author Raymond Julin <raymond.julin@gmail.com>
  */
 class Twig extends \lithium\template\view\Renderer {
+
+	/**
+	 *
+	 */
+	protected static $_lithiumContext = null;
 
 	/**
 	 * The Twig Environment object.
@@ -53,11 +59,9 @@ class Twig extends \lithium\template\view\Renderer {
      *        - `base_template_class`: Overriden to the Template adapter, be carefull with changing this
      *        - `autoescape`: Set to false because the way we inject content is with full html that should not be escaped
 	 * @return void
+	 * @todo Change hardcoded LITHIUM_APP_PATH to be dynamic
 	 */
     public function __construct(array $config = array()) {
-		/**
-		 * TODO Change hardcoded LITHIUM_APP_PATH to be dynamic
-		 */
 		$defaults = array(
 			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
 			'auto_reload' => (!Environment::is('production')),
@@ -74,8 +78,10 @@ class Twig extends \lithium\template\view\Renderer {
 	 *
 	 * @return void
 	 */
-	public function _init() {
+	protected function _init() {
 		parent::_init();
+
+		Twig::$_lithiumContext = $this;
 
 		$Loader = new Twig_Loader_Filesystem(array());
 		$this->environment = new Twig_Environment($Loader, $this->_config);
@@ -104,7 +110,12 @@ class Twig extends \lithium\template\view\Renderer {
 			}
 		}
 
-		$this->environment->addGlobal('view', &$this);
+		$this->environment->addGlobal('view', $this);
+		$this->environment->addGlobal('this', $this);
+		$this->environment->addFunction(
+			'*_helper_*',
+			new Twig_Function_Function('li3_twig\template\view\adapter\Twig::callLithiumHelper')
+		);
 	}
 
 	/**
@@ -130,6 +141,18 @@ class Twig extends \lithium\template\view\Renderer {
 		//Because $this is not available in the Twig template view is used as a substitute.
 		return $template->render((array) $data + array('this' => $this));
 	}
-}
 
+	/**
+	 *
+	 */
+	public static function callLithiumHelper($name, $suffix, $arguments = null) {
+		$helper = self::$_lithiumContext->helper($name);
+
+		if (is_object($helper)) {
+			return $helper->invokeMethod($suffix, $arguments);
+		}
+
+		return '';
+	}
+}
 ?>
