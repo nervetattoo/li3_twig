@@ -113,7 +113,7 @@ class Twig extends \lithium\template\view\Renderer {
 		$this->environment->addGlobal('view', $this);
 		$this->environment->addGlobal('this', $this);
 		$this->environment->addFunction(
-			'*_helper_*',
+			'*_*',
 			new Twig_Function_Function('li3_twig\template\view\adapter\Twig::callLithiumHelper')
 		);
 	}
@@ -147,9 +147,11 @@ class Twig extends \lithium\template\view\Renderer {
 	 */
 	public static function callLithiumHelper($name, $suffix, $arguments = null) {
 		$helper = self::$_lithiumContext->helper($name);
+		$arguments = func_get_args();
 
 		if (is_object($helper)) {
-			return $helper->invokeMethod($suffix, $arguments);
+			$args = array_values(array_splice($arguments, 2));
+			return $helper->invokeMethod($suffix, $args);
 		}
 
 		return '';
