@@ -11,7 +11,7 @@ Enables Twig support for Lithium PHP Framework.
 
 ### Configuration
 
-1. First enable the plugin with
+- First enable the plugin with
 
 ```php
 <?php
@@ -27,7 +27,7 @@ Libraries::add('li3_twig', array(
 ?>
 ```
 
-2. Second, make sure that your rendering process is set to render the new Twig media type:
+- Second, make sure that your rendering process is set to render the new Twig media type:
 
 ```php
 <?php
@@ -64,11 +64,11 @@ For even more Twig and Lithium love, you can use the dynamic `*_*` that will cal
 {{ Form_end }}
 ```
 
-### Note about Lithium helpers
+#### Note about Lithium helpers
 
 If you override or make your own helper functions, make sure to always end your functions by returning a value. If you don't want to output anything, just return an empty string.
 
-### Note about Twig extensions
+### Twig extensions
 
 Todo...
 
