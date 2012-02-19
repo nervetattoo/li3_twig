@@ -13,7 +13,7 @@ use lithium\core\Environment;
 
 use Twig_Environment;
 use Twig_Loader_Filesystem;
-use Twig_Filter_Function;
+use Twig_Extensions;
 use Twig_Function_Function;
 
 use li3_twig\template\view\adapter\Template;
@@ -81,41 +81,37 @@ class Twig extends \lithium\template\view\Renderer {
 	protected function _init() {
 		parent::_init();
 
+		$loader = new Twig_Loader_Filesystem(array());
+		$this->environment = new Twig_Environment($loader, $this->_config);
+
 		Twig::$_lithiumContext = $this;
 
-		$Loader = new Twig_Loader_Filesystem(array());
-		$this->environment = new Twig_Environment($Loader, $this->_config);
+		$library = Libraries::get('li3_twig');
+		$options = $library['config'] + array(
+			'register' => array(
+				'magicHelperMethod' => false,
+				'globals' => false
+			),
+			'extensions' => array()
+		);
 
-		$options = Libraries::get('li3_twig');
-
-		if (!empty($options['config']['filters'])) {
-			if (is_string($options['config']['filters'])) {
-				$filters = array($options['config']['filters']);
-			}
-			else {
-				$filters = $options['config']['filters'];
-			}
-
-			foreach ($filters as $filter) {
-				if (strstr($filter, '::') !== false) {
-					$this->environment->addFilter('test', new Twig_Filter_Function($filter));
-				}
-				else {
-					$methods = get_class_methods($filter);
-
-					foreach ($methods as $method) {
-						$this->environment->addFilter('test', new Twig_Filter_Function($filter.'::'.$method));
-					}
-				}
+		if ($options['register']['magicHelperMethod']) {
+			$this->environment->addFunction(
+				'*_*',
+				new Twig_Function_Function('li3_twig\template\view\adapter\Twig::callLithiumHelper')
+			);
+		}
+		if ($options['register']['globals']) {
+			$this->environment->addGlobal('view', $this);
+			$this->environment->addGlobal('this', $this);
+		}
+		
+		if (!empty($options['extensions'])) {
+			foreach ($options['extensions'] as $extension) {
+				$extensions = $this->helper($extension);
+				$this->environment->addExtension($extensions);
 			}
 		}
-
-		$this->environment->addGlobal('view', $this);
-		$this->environment->addGlobal('this', $this);
-		$this->environment->addFunction(
-			'*_*',
-			new Twig_Function_Function('li3_twig\template\view\adapter\Twig::callLithiumHelper')
-		);
 	}
 
 	/**
