@@ -65,7 +65,6 @@ class Twig extends \lithium\template\view\Renderer {
 		$defaults = array(
 			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
 			'auto_reload' => (!Environment::is('production')),
-			'base_template_class' => 'li3_twig\template\view\adapter\Template',
 			'autoescape' => false
 		);
 
@@ -105,7 +104,7 @@ class Twig extends \lithium\template\view\Renderer {
 			$this->environment->addGlobal('view', $this);
 			$this->environment->addGlobal('this', $this);
 		}
-		
+
 		if (!empty($options['extensions'])) {
 			foreach ($options['extensions'] as $extension) {
 				$extensions = $this->helper($extension);
@@ -115,7 +114,7 @@ class Twig extends \lithium\template\view\Renderer {
 	}
 
 	/**
-	 * Renders a template
+	 * Renders a Twig template.
 	 *
 	 * @param mixed $paths
 	 * @param array $data
@@ -139,15 +138,21 @@ class Twig extends \lithium\template\view\Renderer {
 	}
 
 	/**
+	 * Method which will call a Lithium helper.
 	 *
+	 * @see \lithium\template\view\Render::helper()
+	 * @param string $name Name of the helper called. (ex: 'Html').
+	 * @param string $method Name of the method which will be called on the helper.
+	 * @param array $arguments Arguments which will be passed to the helper method.
+	 * @return string Result of the helper method, empty string if the method or the helper do not exist.
 	 */
-	public static function callLithiumHelper($name, $suffix, $arguments = null) {
+	public static function callLithiumHelper($name, $method, $arguments = null) {
 		$helper = self::$_lithiumContext->helper($name);
 		$arguments = func_get_args();
 
 		if (is_object($helper)) {
 			$args = array_values(array_splice($arguments, 2));
-			return $helper->invokeMethod($suffix, $args);
+			return $helper->invokeMethod($method, $args);
 		}
 
 		return '';
