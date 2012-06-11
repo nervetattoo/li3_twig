@@ -69,8 +69,10 @@ class Twig extends \lithium\template\view\Renderer {
 	 * @todo Change hardcoded LITHIUM_APP_PATH to be dynamic
 	 */
     public function __construct(array $config = array()) {
+		$appConfig = Libraries::get('app');
+
 		$defaults = array(
-			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
+			'cache' => $appConfig['resources'] . '/tmp/cache/templates',
 			'auto_reload' => (!Environment::is('production')),
 			'autoescape' => false
 		);
@@ -107,6 +109,7 @@ class Twig extends \lithium\template\view\Renderer {
 				new Twig_Function_Function('li3_twig\template\view\adapter\Twig::callLithiumHelper')
 			);
 		}
+
 		if ($options['register']['globals']) {
 			$this->environment->addGlobal('view', $this);
 			$this->environment->addGlobal('this', $this);
