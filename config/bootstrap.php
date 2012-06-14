@@ -21,7 +21,7 @@ Libraries::add('Twig', array(
  * Register the Twig media type.
  * The default renderer is still accessible if needed. (default exception handling for example).
  */
-Media::type('twig', array('alias' => 'html'), array(
+Media::type('twig', array('text/html', 'application/xhtml+xml', '*/*'), array(
 	'view' => 'li3_twig\template\View',
 	'loader' => 'li3_twig\template\Loader',
 	'renderer' => 'li3_twig\template\view\adapter\Twig',
