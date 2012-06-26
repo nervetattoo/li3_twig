@@ -133,6 +133,7 @@ class Twig extends \lithium\template\view\Renderer {
 	 */
 	public function render($paths, $data = array(), array $options = array()) {
 		$this->_context = $options['context'] + $this->_context;
+		$this->_data = $data;
 
 		$directories = array_map(function ($item) {
 			return dirname($item);
