@@ -10,8 +10,12 @@ namespace li3_twig\template\view\adapter;
 
 use lithium\core\Libraries;
 use lithium\core\Environment;
+
 use Twig_Environment;
 use Twig_Loader_Filesystem;
+use Twig_Extensions;
+use Twig_Function_Function;
+
 use li3_twig\template\view\adapter\Template;
 
 /**
@@ -24,11 +28,23 @@ use li3_twig\template\view\adapter\Template;
  * {{ this.form.end }}
  * }}}
  *
+ * You can also do:
+ * {{{
+ * {{ Form_create() }}
+ * {{ Form_text('title') }}
+ * {{ Form.end() }}
+ * }}}
+ *
  * @see http://twig-project.org
  * @see lithium\template\view\Renderer
  * @author Raymond Julin <raymond.julin@gmail.com>
  */
 class Twig extends \lithium\template\view\Renderer {
+
+	/**
+	 *
+	 */
+	protected static $_lithiumContext = null;
 
 	/**
 	 * The Twig Environment object.
@@ -50,33 +66,65 @@ class Twig extends \lithium\template\view\Renderer {
      *        - `base_template_class`: Overriden to the Template adapter, be carefull with changing this
      *        - `autoescape`: Set to false because the way we inject content is with full html that should not be escaped
 	 * @return void
+	 * @todo Change hardcoded LITHIUM_APP_PATH to be dynamic
 	 */
     public function __construct(array $config = array()) {
-        /**
-         * TODO Change hardcoded LITHIUM_APP_PATH to be dynamic
-         */
+		$appConfig = Libraries::get('app');
+
 		$defaults = array(
-			'cache' => LITHIUM_APP_PATH . '/resources/tmp/cache/templates',
-            'auto_reload' => (!Environment::is('production')),
-            'base_template_class' => 'li3_twig\template\view\adapter\Template',
-            'autoescape' => false
+			'cache' => $appConfig['resources'] . '/tmp/cache/templates',
+			'auto_reload' => (!Environment::is('production')),
+			'autoescape' => false
 		);
+
 		parent::__construct($config + $defaults);
 	}
 
 	/**
 	 * Initialize the necessary Twig objects & attach them to the current object instance.
+	 * Attach any configured filters in the lithium app bootstrap to the Twig object.
 	 *
 	 * @return void
 	 */
-	public function _init() {
+	protected function _init() {
 		parent::_init();
-		$Loader = new Twig_Loader_Filesystem(array());
-		$this->environment = new Twig_Environment($Loader, $this->_config);
+
+		$loader = new Twig_Loader_Filesystem(array());
+		$this->environment = new Twig_Environment($loader, $this->_config);
+
+		Twig::$_lithiumContext = $this;
+
+		$library = Libraries::get('li3_twig');
+		$options = $library['config'] + array(
+			'register' => array(
+				'magicHelperMethod' => false,
+				'globals' => false
+			),
+			'extensions' => array()
+		);
+
+		if ($options['register']['magicHelperMethod']) {
+			$this->environment->addFunction(
+				'*_*',
+				new Twig_Function_Function('li3_twig\template\view\adapter\Twig::callLithiumHelper')
+			);
+		}
+
+		if ($options['register']['globals']) {
+			$this->environment->addGlobal('view', $this);
+			$this->environment->addGlobal('this', $this);
+		}
+
+		if (!empty($options['extensions'])) {
+			foreach ($options['extensions'] as $extension) {
+				$extensions = $this->helper($extension);
+				$this->environment->addExtension($extensions);
+			}
+		}
 	}
 
 	/**
-	 * Renders a template
+	 * Renders a Twig template.
 	 *
 	 * @param mixed $paths
 	 * @param array $data
@@ -85,6 +133,7 @@ class Twig extends \lithium\template\view\Renderer {
 	 */
 	public function render($paths, $data = array(), array $options = array()) {
 		$this->_context = $options['context'] + $this->_context;
+		$this->_data = $data;
 
 		$directories = array_map(function ($item) {
 			return dirname($item);
@@ -95,8 +144,28 @@ class Twig extends \lithium\template\view\Renderer {
 		//Loading template.. Will look in all the paths.
 		$template = $this->environment->loadTemplate(basename($paths[0]));
 
-		//Because $this is not available in the Twig template view is used as a substitute.
-		return $template->render((array) $data + array('this' => $this));
+		return $template->render((array) $data);
+	}
+
+	/**
+	 * Method which will call a Lithium helper.
+	 *
+	 * @see \lithium\template\view\Render::helper()
+	 * @param string $name Name of the helper called. (ex: 'Html').
+	 * @param string $method Name of the method which will be called on the helper.
+	 * @param array $arguments Arguments which will be passed to the helper method.
+	 * @return string Result of the helper method, empty string if the method or the helper do not exist.
+	 */
+	public static function callLithiumHelper($name, $method, $arguments = null) {
+		$helper = self::$_lithiumContext->helper($name);
+		$arguments = func_get_args();
+
+		if (is_object($helper)) {
+			$args = array_values(array_splice($arguments, 2));
+			return $helper->invokeMethod($method, $args);
+		}
+
+		return '';
 	}
 }
 

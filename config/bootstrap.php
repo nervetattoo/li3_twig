@@ -18,15 +18,18 @@ Libraries::add('Twig', array(
 ));
 
 /**
- * Add Twig to recognized media types.
+ * Register the Twig media type.
+ * The default renderer is still accessible if needed. (default exception handling for example).
  */
-Media::type('default', null, array(
-	'view' => 'lithium\template\View',
+Media::type('twig', array('text/html', 'application/xhtml+xml', '*/*'), array(
+	'view' => 'li3_twig\template\View',
 	'loader' => 'li3_twig\template\Loader',
 	'renderer' => 'li3_twig\template\view\adapter\Twig',
 	'paths' => array(
-		'template' => '{:library}/views/{:controller}/{:template}.{:type}.twig',
-		'layout' => '{:library}/views/layouts/{:layout}.{:type}.twig'
+		'template' => array(
+			'{:library}/views/{:controller}/{:template}.html.twig',
+			'{:library}/views/layouts'
+		)
 	)
 ));
 
