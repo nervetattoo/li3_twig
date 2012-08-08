@@ -41,6 +41,8 @@ use li3_twig\template\view\adapter\Template;
  */
 class Twig extends \lithium\template\view\Renderer {
 
+	const CACHE_PATH = '/tmp/cache/templates';
+
 	/**
 	 *
 	 */
@@ -72,7 +74,7 @@ class Twig extends \lithium\template\view\Renderer {
 		$appConfig = Libraries::get('app');
 
 		$defaults = array(
-			'cache' => $appConfig['resources'] . '/tmp/cache/templates',
+			'cache' => $appConfig['resources'] . Twig::CACHE_PATH,
 			'auto_reload' => (!Environment::is('production')),
 			'autoescape' => false
 		);
