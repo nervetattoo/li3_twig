@@ -8,13 +8,13 @@
 
 namespace li3_twig\template\view\adapter;
 
-use lithium\core\Libraries;
 use lithium\core\Environment;
+use lithium\core\Libraries;
 
 use Twig_Environment;
-use Twig_Loader_Filesystem;
 use Twig_Extensions;
 use Twig_Function_Function;
+use Twig_Loader_Filesystem;
 
 use li3_twig\template\view\adapter\Template;
 
@@ -28,7 +28,7 @@ use li3_twig\template\view\adapter\Template;
  * {{ this.form.end }}
  * }}}
  *
- * You can also do:
+ * You can also do if you use the magic helper method:
  * {{{
  * {{ Form_create() }}
  * {{ Form_text('title') }}
@@ -38,6 +38,7 @@ use li3_twig\template\view\adapter\Template;
  * @see http://twig-project.org
  * @see lithium\template\view\Renderer
  * @author Raymond Julin <raymond.julin@gmail.com>
+ * @author Marc Ghorayeb <contact@marcghorayeb.com>
  */
 class Twig extends \lithium\template\view\Renderer {
 
@@ -97,13 +98,15 @@ class Twig extends \lithium\template\view\Renderer {
 		Twig::$_lithiumContext = $this;
 
 		$library = Libraries::get('li3_twig');
-		$options = $library['config'] + array(
+		$defaults = array(
 			'register' => array(
 				'magicHelperMethod' => false,
 				'globals' => false
 			),
 			'extensions' => array()
 		);
+
+		$options = empty($library['config']) || !is_array($library['config']) ? $defaults : $defaults + $library['config'];
 
 		if ($options['register']['magicHelperMethod']) {
 			$this->environment->addFunction(
