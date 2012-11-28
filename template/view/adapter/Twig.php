@@ -106,7 +106,7 @@ class Twig extends \lithium\template\view\Renderer {
 			'extensions' => array()
 		);
 
-		$options = empty($library['config']) || !is_array($library['config']) ? $defaults : $defaults + $library['config'];
+		$options = empty($library['config']) || !is_array($library['config']) ? $defaults : $library['config'] + $defaults;
 
 		if ($options['register']['magicHelperMethod']) {
 			$this->environment->addFunction(
