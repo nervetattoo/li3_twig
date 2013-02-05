@@ -72,11 +72,9 @@ class Twig extends \lithium\template\view\Renderer {
 	 * @todo Change hardcoded LITHIUM_APP_PATH to be dynamic
 	 */
     public function __construct(array $config = array()) {
-		$appConfig = Libraries::get('app');
-
 		$defaults = array(
-			'cache' => $appConfig['resources'] . Twig::CACHE_PATH,
-			'auto_reload' => (!Environment::is('production')),
+			'cache' => Twig::cachePath(),
+			'auto_reload' => !Environment::is('production'),
 			'autoescape' => false
 		);
 
@@ -171,6 +169,15 @@ class Twig extends \lithium\template\view\Renderer {
 		}
 
 		return '';
+	}
+
+	/**
+	 * Returns the cache path where compiled templates will be saved.
+	 * @return string Path.
+	 */
+	public static function cachePath() {
+		$config = Libraries::get('app');
+		return $config['resources'] . Twig::CACHE_PATH;
 	}
 }
 
