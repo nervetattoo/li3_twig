@@ -34,7 +34,7 @@ class Twig extends \lithium\console\Command {
 		$this->out('Starting cache flush.');
 
 		if (is_dir($dir)) {
-			$this->out('Cache folder found : ' . $resources);
+			$this->out('Cache folder found : ' . $dir);
 
 			if (is_dir($trash)) {
 				$this->out('Old trash folder found (previous command failure possible), deleting it...');
