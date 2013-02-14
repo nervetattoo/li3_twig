@@ -1,11 +1,11 @@
 <?php
 
-namespace sc_common\extensions\command;
+namespace li3_twig\extensions\command;
 
 use lithium\core\Libraries;
 use li3_twig\template\view\adapter\Twig as TwigAdapter;
 
-class Twig extends Command {
+class Twig extends \lithium\console\Command {
 
 	/**
 	 * Temporary folder to safely remove the real template cache folder.
@@ -61,19 +61,19 @@ class Twig extends Command {
 	 *
 	 */
 	protected function _rrmdir($dir) {
-		if (is_dir($dir)) {
-			foreach (glob($dir . '/*') as $file) {
-				if (is_dir($file)) {
-					$this->_rrmdir($file);
-				} else {
-					unlink($file);
-				}
-			}
-
-			return rmdir($dir);
+		if (!is_dir($dir)) {
+			return false;
 		}
 
-		return false;
+		foreach (glob($dir . '/*') as $file) {
+			if (is_dir($file)) {
+				$this->_rrmdir($file);
+			} else {
+				unlink($file);
+			}
+		}
+
+		return rmdir($dir);
 	}
 }
 
