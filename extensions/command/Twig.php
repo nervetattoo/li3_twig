@@ -51,10 +51,10 @@ class Twig extends \lithium\console\Command {
 		}
 
 		if (!$success) {
-			$this->error('Error while deleting Twig template cache.');
+			return $this->error('Error while deleting Twig template cache.');
 		}
 
-		$this->out('Success!');
+		return $this->out('Success!');
 	}
 
 	/**
