@@ -1,6 +1,6 @@
 # li3_twig
 
-Enables Twig support for the [Lithium PHP Framework](https://github.com/UnionOfRAD/lithium).
+Enables [Twig](http://twig.sensiolabs.org/) support for the [Lithium PHP Framework](https://github.com/UnionOfRAD/lithium).
 
 ## Installation
 
@@ -11,7 +11,7 @@ Enables Twig support for the [Lithium PHP Framework](https://github.com/UnionOfR
 
 ### Configuration
 
-- First enable the plugin inside your Lithium app by adding the following to your `bootstrap/libraries.php` file:
+- First enable the library inside your Lithium app by adding the following to your `bootstrap/libraries.php` file:
 
 ```
 Libraries::add('li3_twig', array(
@@ -81,5 +81,5 @@ Remember to execute this every time your production files are updated.
 
 ## Thanks
 
-This library is a fork from nervetattoo's github repository. Thank's to him for putting me on the right track with his plug-in!
+This library is a fork from nervetattoo's github repository. Thank's to him for putting me on the right track with his library!
 Thanks to the Lithium framework and to all of its contributors! Their framework is kind of the only reason I continue to use php today :)
