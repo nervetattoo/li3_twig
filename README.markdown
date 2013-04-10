@@ -1,8 +1,8 @@
-# li3_twig
+# DEPRECATED
 
-Enables Twig support for Lithium PHP Framework.
+Make sure you use the [official lithium twig plugin](http://github.com/unionofrad/li3_twig) instead of this outdated version.
 
-## Usage
+### Old docs
 
 First enable the plugin with 
 
